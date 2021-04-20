@@ -5,20 +5,26 @@ void print_list(const LList* list);
 
 int main(int argc, char* argv[])
 {
-    LList list;
-    initialize_list(&list);
+    LList* list = create_list();
+    int* a = (int*) calloc(1, sizeof(int));
+    void* data;
+    
+    if (initialize_list(&list) == 0)
+    {
+        for (int i = 0; i < 10; i++)
+        {
+            a = (int*) calloc(1, sizeof(int));
+            *a = i;
 
-    int a = 10;
-    int b = 11;
-    int c = 12;
+            insert_first(&list, (void*) a);
+        }
 
-    print_list(&list);
+        print_list(list);
 
-    printf("%d\n", find_inode(&list, (void*) &b));
-
-    printf("\n\n\n");
-
-    print_list(icopy(&list));
+        delete_first(&list, &data);
+        printf("%d\n", *((int*) data));
+        print_list(list);
+    }
 
     return 0;
 }
