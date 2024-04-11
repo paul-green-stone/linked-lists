@@ -25,7 +25,7 @@ struct methods {
 
     void (*destroy)(void* data);
 
-    void (*print)(void* data);
+    void (*print)(void* data, FILE* stream);
 
     int (*match)(void* data_1, void* data_2);
 };
@@ -93,7 +93,7 @@ static int Node_destroy(sNode_t* node, void** data) {
 /* =========== sList_new ========== */
 /* ================================ */
 
-int sList_new(sList_t* list, void (*destroy)(void* data), void (*print)(void* data), int (*match)(void* data_1, void* data_2)) {
+int sList_new(sList_t* list, void (*destroy)(void* data), void (*print)(void* data, FILE* file), int (*match)(void* data_1, void* data_2)) {
 
     sList_t l = NULL;
 
@@ -236,6 +236,33 @@ ssize_t sList_size(const sList_t list) {
     }
 
     return list->data->size;
+}
+
+/* ================================ */
+/* ========= sList_print ========== */
+/* ================================ */
+
+int sList_printTo(const sList_t list, const char* delimiter, FILE* file) {
+
+    sNode_t node = NULL;
+
+    if (list == NULL) {
+        return 1;
+    }
+
+    if (list->methods->print == NULL) {
+        return 1;
+    }
+
+    for (node = list->data->head; node != NULL; node = node->next) {
+        list->methods->print(node->data, file);
+
+        if (node != list->data->tail) {
+            fprintf((file == NULL) ? stdout : file, "%s", (delimiter != NULL) ? delimiter : "");
+        }
+    }
+
+    return 0;
 }
 
 /* ================================================================ */
