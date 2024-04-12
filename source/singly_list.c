@@ -265,4 +265,61 @@ int sList_printTo(const sList_t list, const char* delimiter, FILE* file) {
     return 0;
 }
 
+/* ================================ */
+/* ====== sList_insert_first ====== */
+/* ================================ */
+
+int sList_insert_first(const sList_t list, void* data) {
+
+    int code = 0;
+    sNode_t node = NULL;
+
+    if (list == NULL) {
+        return -1;
+    }
+
+    if ((code = Node_new(data, &node)) != 0) {
+        return code;
+    }
+
+    if (list->data->size == 0) {
+        list->data->head = list->data->tail = node;
+    }
+    else {
+        node->next = list->data->head;
+        list->data->head = node;
+    }
+
+    list->data->size++;
+
+    node->list = list;
+
+    return code;
+}
+
+/* ================================ */
+/* ====== sList_insert_clear ====== */
+/* ================================ */
+
+int sList_clear(const sList_t list) {
+
+    void* data = NULL;
+
+    if (list == NULL) {
+        return 1;
+    }
+
+    while (list->data->size > 0) {
+
+        /* The return value can be safely ignored */
+        sList_remove_first(list, &data);
+
+        if (list->methods->destroy != NULL) {
+            list->methods->destroy(data);
+        }
+    }
+
+    return 0;
+}
+
 /* ================================================================ */
