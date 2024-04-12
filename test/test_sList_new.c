@@ -76,14 +76,13 @@ void test_sList_insert_last(void) {
 
 void test_sList_print(void) {
 
-    /* Reopen STDOUT */
     FILE* f = fopen(file_name, "w+");
     /* File size. Number of bytes corresponds to the number of characters in a file (text one) */
     size_t size = 0;
 
     CU_ASSERT_PTR_NOT_NULL(f);
 
-    /* Expected output of the function */
+    /* Expected output */
     char buffer[BUFFER_SIZE] = "0, 1, 2, 3, 4, 5, 6, 7, 8, 9";
     /* What had been read from a file */
     char file_content[BUFFER_SIZE];
@@ -95,9 +94,72 @@ void test_sList_print(void) {
 
     fread(file_content, 1, size, f);
 
+    file_content[size] = '\0';
+
     CU_ASSERT_STRING_EQUAL(file_content, buffer);
 
     fclose(f);
+
+    remove(file_name);
+}
+
+/* ================================================================ */
+/* ======================= sList_clear TEST ======================= */
+/* ================================================================ */
+
+void test_sList_clear(void) {
+
+    sList_clear(list);
+
+    CU_ASSERT_EQUAL(sList_size(list), 0);
+}
+
+/* ================================================================ */
+/* =================== sList_insert_first TEST ==================== */
+/* ================================================================ */
+
+void test_sList_insert_first(void) {
+    
+    ssize_t i = 0;
+
+    for (; i < size; i++) {
+        sList_insert_first(list, &array[i]);
+    }
+
+    CU_ASSERT_EQUAL(sList_size(list), size);
+}
+
+/* ================================================================ */
+/* ====================== sList_print1 TEST ======================= */
+/* ================================================================ */
+
+void test_sList_print1(void) {
+
+    FILE* f = fopen(file_name, "w+");
+    /* File size. Number of bytes corresponds to the number of characters in a file (text one) */
+    size_t size = 0;
+
+    CU_ASSERT_PTR_NOT_NULL(f);
+
+    /* Expected output */
+    char buffer[BUFFER_SIZE] = "9, 8, 7, 6, 5, 4, 3, 2, 1, 0";
+    /* What had been read from a file */
+    char file_content[BUFFER_SIZE];
+
+    sList_printTo(list, ", ", f);
+    
+    size = ftell(f);
+    fseek(f, 0, SEEK_SET);
+
+    fread(file_content, 1, size, f);
+
+    file_content[size] = '\0';
+
+    CU_ASSERT_STRING_EQUAL(file_content, buffer);
+
+    fclose(f);
+
+    remove(file_name);
 }
 
 /* ================================ */
@@ -131,14 +193,14 @@ int main(int argc, char** argv) {
     }
 
     /* SUITE */
-    if ((CU_add_test(suite, "test_sList_new & test_sList_insert_last", test_sList_new) == NULL) || (CU_add_test(suite, "test_sList_insert_last", test_sList_insert_last) == NULL)) {
+    if ((CU_add_test(suite, "test_sList_new", test_sList_new) == NULL) || (CU_add_test(suite, "test_sList_insert_last", test_sList_insert_last) == NULL)) {
         CU_cleanup_registry();
 
         return CU_get_error();
     }
 
     /* SUITE 1 */
-    if ((CU_add_test(suite1, "test_sList_print", test_sList_print) == NULL)) {
+    if ( (CU_add_test(suite1, "test_sList_print", test_sList_print) == NULL) || (CU_add_test(suite1, "test_sList_clear", test_sList_clear) == NULL) || (CU_add_test(suite1, "test_sList_insert_first", test_sList_insert_first) == NULL) || ((CU_add_test(suite1, "test_sList_print", test_sList_print1) == NULL))) {
         CU_cleanup_registry();
 
         return CU_get_error();
