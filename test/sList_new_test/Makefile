@@ -6,14 +6,14 @@ LDFLAGS := -lcunit
 
 SRCS := $(wildcard ./*.c)
 
-BIN := test
+BIN := a.out
 
 # ================================================================ #
 
 all: $(BIN)
 
 $(BIN): $(SRCS)
-	$(CC) $(ALL_CFLAGS) $< -o $@ ../liblists.a $(LDFLAGS) 
+	$(CC) $(ALL_CFLAGS) $< -o $@ ../../liblists.a $(LDFLAGS) 
 
 # ================================================================ #
 
