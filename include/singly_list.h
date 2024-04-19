@@ -41,6 +41,10 @@ extern int sList_insert_first(const sList_t list, void* data);
 
 extern int sList_clear(const sList_t list);
 
+/* ================================ */
+
+extern int sList_find(const sList_t list, void* data, sNode_t* node);
+
 /* ================================================================ */
 
 #endif /* singly_list_h */

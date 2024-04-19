@@ -365,4 +365,34 @@ int sList_remove_last(const sList_t list, void** data) {
     return 0;
 }
 
+/* ================================ */
+/* ========== sList_find ========== */
+/* ================================ */
+
+int sList_find(const sList_t list, void* data, sNode_t* node) {
+
+    sNode_t temp = NULL;
+
+    if (list == NULL) {
+        return 1;
+    }
+
+    if (data == NULL) {
+        return 1;
+    }
+
+    for (temp = list->data->head; temp != NULL; temp = temp->next) {
+
+        if (list->methods->match(temp->data, data) == 0) {
+            *node = temp;
+
+            return 0;
+        }
+    }
+
+    /* ======== */
+
+    return 1;
+}
+
 /* ================================================================ */
