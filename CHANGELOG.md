@@ -47,3 +47,9 @@ Updated test suites to handle different list operations
 ### Fixed
 
 - Fixed a bug that caused the test for the `sList_printTo` function to fail due to incorrect handling of the last element addition after reading from a file
+- 
+## [Unreleased 0.3.1] 2024-04-19
+
+### Fixed
+
+- Implemented separate test cases for different operations, organizing them into individual directories. Enhanced test suite structure for better readability and management.
