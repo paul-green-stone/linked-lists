@@ -322,4 +322,47 @@ int sList_clear(const sList_t list) {
     return 0;
 }
 
+/* ================================ */
+/* ====== sList_remove_last ======= */
+/* ================================ */
+
+int sList_remove_last(const sList_t list, void** data) {
+
+    ssize_t size;
+
+    sNode_t node = NULL;
+    sNode_t temp = NULL;
+
+    if (list == NULL) {
+        return 1;
+    }
+
+    size = list->data->size;
+
+    if (size > 0) {
+
+        node = list->data->tail;
+        *data = node->data;
+
+        if (size == 1) {
+            list->data->head = list->data->tail = NULL;
+        }
+        else {
+
+            for (temp = list->data->head; temp->next != list->data->tail; temp = temp->next) ;
+
+            list->data->tail = temp;
+            list->data->tail->next = NULL;
+        }
+
+        Node_destroy(&node, data);
+
+        list->data->size--;
+    }
+
+    /* ======== */
+
+    return 0;
+}
+
 /* ================================================================ */

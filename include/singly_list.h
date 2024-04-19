@@ -23,6 +23,10 @@ extern int sList_remove_first(const sList_t list, void** data);
 
 /* ================================ */
 
+extern int sList_remove_last(const sList_t list, void** data);
+
+/* ================================ */
+
 extern ssize_t sList_size(const sList_t list);
 
 /* ================================ */
