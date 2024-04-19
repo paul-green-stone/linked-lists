@@ -53,7 +53,7 @@ void sList_insert_last_test(void) {
 /* ======================= sList_print TEST ======================= */
 /* ================================================================ */
 
-void test_sList_print(void) {
+void sList_print_test(void) {
 
     FILE* f = fopen(file_name, "w+");
     /* File size. Number of bytes corresponds to the number of characters in a file (text one) */
@@ -78,11 +78,57 @@ void test_sList_print(void) {
     CU_ASSERT_STRING_EQUAL(file_content, buffer);
 
     fclose(f);
+}
+
+/* ================================================================ */
+/* ======================= sList_clear TEST ======================= */
+/* ================================================================ */
+
+void sList_clear_test_suite2(void) {
+
+    sList_clear(list);
+    CU_ASSERT_EQUAL(sList_size(list), 0);
+
+    size_t i = 0;
+
+    for (; i < size; i+= 2) {
+        sList_insert_last(list, &array[i]);
+    }
+
+    CU_ASSERT_EQUAL(sList_size(list), size / 2);
+}
+
+/* ================================================================ */
+/* ======================= sList_print TEST ======================= */
+/* ================================================================ */
+
+void sList_print_test_suite2(void) {
+
+    FILE* f = fopen(file_name, "w+");
+    /* File size. Number of bytes corresponds to the number of characters in a file (text one) */
+    size_t size = 0;
+
+    CU_ASSERT_PTR_NOT_NULL(f);
+
+    /* Expected value after clearing and populating once again */
+    char buffer[BUFFER_SIZE] = "0, 2, 4, 6, 8";
+    /* What had been read from a file */
+    char file_content[BUFFER_SIZE];
+
+    sList_printTo(list, ", ", f);
+    
+    size = ftell(f);
+    fseek(f, 0, SEEK_SET);
+
+    fread(file_content, 1, size, f);
+
+    file_content[size] = '\0';
+
+    CU_ASSERT_STRING_EQUAL(file_content, buffer);
+
+    fclose(f);
 
     remove(file_name);
-
-    sList_destroy(&list);
-    CU_ASSERT_PTR_NULL(list);
 }
 
 /* ================================================================ */
@@ -90,23 +136,42 @@ void test_sList_print(void) {
 int main(int argc, char** argv) {
 
     /* List creation and population of it with data */
-    CU_pSuite suite = NULL;
+    CU_pSuite suite1 = NULL;
+
+    /* Clearing and populating */
+    CU_pSuite suite2 = NULL;
 
     if (CU_initialize_registry() != CUE_SUCCESS) {
         return CU_get_error();
     }
 
-    /* Add a suite to the registry */
-    suite = CU_add_suite("sList_insert_last & test_sList_print", NULL, NULL);
+    /* Add a suite1 to the registry */
+    suite1 = CU_add_suite("sList_insert_last & test_sList_print", NULL, NULL);
 
-    if (suite == NULL) {
+    if (suite1 == NULL) {
         CU_cleanup_registry();
 
         return CU_get_error();
     }
 
-    /* SUITE */
-    if ((CU_add_test(suite, "sList_insert_last_test", sList_insert_last_test) == NULL) || (CU_add_test(suite, "sList_print_test", test_sList_print) == NULL)) {
+    /* Add a suite2 to the registry */
+    suite2 = CU_add_suite("sList_clear & test_sList_print", NULL, NULL);
+
+    if (suite2 == NULL) {
+        CU_cleanup_registry();
+
+        return CU_get_error();
+    }
+
+    /* suite1 */
+    if ((CU_add_test(suite1, "sList_insert_last_test", sList_insert_last_test) == NULL) || (CU_add_test(suite1, "sList_print_test", sList_print_test) == NULL)) {
+        CU_cleanup_registry();
+
+        return CU_get_error();
+    }
+
+    /* suite2 */
+    if ((CU_add_test(suite2, "sList_clear_test_suite2", sList_clear_test_suite2) == NULL) || (CU_add_test(suite2, "sList_print_test_suite2", sList_print_test_suite2) == NULL)) {
         CU_cleanup_registry();
 
         return CU_get_error();
