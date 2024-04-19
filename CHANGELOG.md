@@ -53,3 +53,14 @@ Updated test suites to handle different list operations
 ### Fixed
 
 - Implemented separate test cases for different operations, organizing them into individual directories. Enhanced test suite structure for better readability and management.
+
+## [Unreleased 0.4.0] 2024-04-20
+
+### Added
+
+- Implemented an `sList_find` function that looks for a node with the given data in the given list
+
+- Added a test for `sList_remove_last` function
+- Added a test for `sList_insert_last` function
+- Added a test for `sList_remove_last` function
+- Added a test for `sList_find` function
