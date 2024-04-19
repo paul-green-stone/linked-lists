@@ -81,21 +81,21 @@ void sList_print_test(void) {
 }
 
 /* ================================================================ */
-/* ==================== sList_remove_last TEST ==================== */
+/* =================== sList_remove_first TEST ==================== */
 /* ================================================================ */
 
-void sList_remove_last_test_suite2(void) {
+void sList_remove_first_test_suite2(void) {
 
     void* data = NULL;
     int value;
 
-    sList_remove_last(list, &data);
+    sList_remove_first(list, &data);
 
     value = *((int*) data);
 
     CU_ASSERT_EQUAL(sList_size(list), size - 1);
 
-    CU_ASSERT_EQUAL(value, 9);
+    CU_ASSERT_EQUAL(value, 0);
 }
 
 /* ================================================================ */
@@ -111,7 +111,7 @@ void sList_print_test_suite2(void) {
     CU_ASSERT_PTR_NOT_NULL(f);
 
     /* Expected value after clearing and populating once again */
-    char buffer[BUFFER_SIZE] = "0, 1, 2, 3, 4, 5, 6, 7, 8";
+    char buffer[BUFFER_SIZE] = "1, 2, 3, 4, 5, 6, 7, 8, 9";
     /* What had been read from a file */
     char file_content[BUFFER_SIZE];
 
@@ -140,7 +140,7 @@ int main(int argc, char** argv) {
     /* List creation and population of it with data */
     CU_pSuite suite1 = NULL;
 
-    /* Clearing and populating */
+    /* Removing the first element */
     CU_pSuite suite2 = NULL;
 
     if (CU_initialize_registry() != CUE_SUCCESS) {
@@ -157,7 +157,7 @@ int main(int argc, char** argv) {
     }
 
     /* Add a suite2 to the registry */
-    suite2 = CU_add_suite("sList_remove_last & test_sList_print", NULL, NULL);
+    suite2 = CU_add_suite("sList_remove_first & test_sList_print", NULL, NULL);
 
     if (suite2 == NULL) {
         CU_cleanup_registry();
@@ -173,7 +173,7 @@ int main(int argc, char** argv) {
     }
 
     /* suite2 */
-    if ((CU_add_test(suite2, "sList_remove_last_test_suite2", sList_remove_last_test_suite2) == NULL) || (CU_add_test(suite2, "sList_print_test_suite2", sList_print_test_suite2) == NULL)) {
+    if ((CU_add_test(suite2, "sList_remove_first_test_suite2", sList_remove_first_test_suite2) == NULL) || (CU_add_test(suite2, "sList_print_test_suite2", sList_print_test_suite2) == NULL)) {
         CU_cleanup_registry();
 
         return CU_get_error();
