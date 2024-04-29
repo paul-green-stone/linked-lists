@@ -538,4 +538,45 @@ int sList_foreach(const sList_t list, int (*func)(void* data)) {
     return nodes_affected;
 }
 
+/* ================================ */
+/* ========= sList_next =========== */
+/* ================================ */
+
+int sList_next(const sList_t list, void** data) {
+
+    /* List that is being operated on */
+    static sList_t l = NULL;
+
+    /* The list node whose data was returned by the previous call */
+    static sNode_t n = NULL;
+
+    // The first time the function is being called requires us to set up its internals
+    // or
+    // when the new list specified does not match the one specified in the iterator.
+    if ((l == NULL) || ((l != list) && (list != NULL))) {
+
+        l = list;
+
+        if (list->data->size > 0) {
+            n = list->data->head;
+        }
+    }
+
+    if (l == NULL) {
+        return 1;
+    }
+
+    *data = n->data;
+
+    n = n->next;
+
+    if (n == NULL) {
+        n = list->data->head;
+    }
+
+    /* ======== */
+
+    return 0;
+}
+
 /* ================================================================ */

@@ -61,6 +61,10 @@ extern int sList_delete_Node(const sList_t list, sNode_t node, void** data);
 
 extern int sList_foreach(const sList_t list, int (*func)(void* data));
 
+/* ================================ */
+
+extern int sList_next(const sList_t list, void** data);
+
 /* ================================================================ */
 
 #endif /* singly_list_h */
