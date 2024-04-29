@@ -381,6 +381,10 @@ int sList_find(const sList_t list, void* data, sNode_t* node) {
         return 1;
     }
 
+    if (list->methods->match == NULL) {
+        return 1;
+    }
+
     for (temp = list->data->head; temp != NULL; temp = temp->next) {
 
         if (list->methods->match(temp->data, data) == 0) {
