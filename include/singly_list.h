@@ -65,6 +65,18 @@ extern int sList_foreach(const sList_t list, int (*func)(void* data));
 
 extern int sList_next(const sList_t list, void** data);
 
+/* ================================ */
+
+extern int sList_head(const sList_t list, sNode_t* node);
+
+/* ================================ */
+
+extern int sList_tail(const sList_t list, sNode_t* node);
+
+/* ================================ */
+
+extern int sNode_data(const sNode_t node, void** data);
+
 /* ================================================================ */
 
 #endif /* singly_list_h */

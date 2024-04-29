@@ -579,4 +579,55 @@ int sList_next(const sList_t list, void** data) {
     return 0;
 }
 
+/* ================================ */
+/* ========= sList_head =========== */
+/* ================================ */
+
+int sList_head(const sList_t list, sNode_t* node) {
+
+    if (list == NULL) {
+        return 1;
+    }
+
+    *node = list->data->head;
+
+    /* ======== */
+
+    return 0;
+}
+
+/* ================================ */
+/* ========= sList_tail =========== */
+/* ================================ */
+
+int sList_tail(const sList_t list, sNode_t* node) {
+
+    if (list == NULL) {
+        return 1;
+    }
+
+    *node = list->data->tail;
+
+    /* ======== */
+
+    return 0;
+}
+
+/* ================================ */
+/* ========= sNode_data =========== */
+/* ================================ */
+
+int sNode_data(const sNode_t node, void** data) {
+
+    if (node == NULL) {
+        return 1;
+    }
+
+    *data = node->data;
+
+    /* ======== */
+
+    return 0;
+}
+
 /* ================================================================ */
