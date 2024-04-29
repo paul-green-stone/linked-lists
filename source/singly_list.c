@@ -395,4 +395,40 @@ int sList_find(const sList_t list, void* data, sNode_t* node) {
     return 1;
 }
 
+/* ================================ */
+/* ====== sList_insert_after ====== */
+/* ================================ */
+
+int sList_insert_after(const sList_t list, const sNode_t node, void* data) {
+
+    sNode_t new_node = NULL;
+
+    if (list == NULL) {
+        return 1;
+    }
+
+    if ((node == NULL) || (node == list->data->tail)) {
+        return sList_insert_last(list, data);
+    }
+
+    if (node->list != list) {
+        return 1;
+    }
+
+    if (Node_new(data, &new_node) != 0) {
+        return 1;
+    }
+
+    new_node->next = node->next;
+    node->next = new_node;
+
+    list->data->size++;
+
+    new_node->list = list;
+
+    /* ======== */
+
+    return 0;
+}
+
 /* ================================================================ */
