@@ -456,7 +456,7 @@ int sList_insert_before(const sList_t list, const sNode_t node, void* data) {
         return 1;
     }
 
-    for (temp = list->data->head; temp->next != node && temp != NULL; temp = temp->next) ;
+    for (temp = list->data->head; temp->next != node; temp = temp->next) ;
 
     if (Node_new(data, &new_node) != 0) {
         return 1;
@@ -468,6 +468,43 @@ int sList_insert_before(const sList_t list, const sNode_t node, void* data) {
     list->data->size++;
 
     new_node->list = list;
+
+    /* ======== */
+
+    return 0;
+}
+
+/* ================================ */
+/* ====== sList_delete_Node ======= */
+/* ================================ */
+
+int sList_delete_Node(const sList_t list, sNode_t node, void** data) {
+
+    sNode_t temp = NULL;
+
+    if (list == NULL) {
+        return 1;
+    }
+
+    if (node == list->data->head) {
+        return sList_remove_first(list, data);
+    }
+
+    if (node == list->data->tail) {
+        return sList_remove_last(list, data);
+    }
+
+    if (node->list != list) {
+        return 1;
+    }
+
+    for (temp = list->data->head; temp->next != node; temp = temp->next) ;
+
+    temp->next = node->next;
+
+    Node_destroy(&node, data);
+
+    list->data->size--;
 
     /* ======== */
 

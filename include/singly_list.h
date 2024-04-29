@@ -53,6 +53,10 @@ extern int sList_insert_after(const sList_t list, const sNode_t node, void* data
 
 extern int sList_insert_before(const sList_t list, const sNode_t node, void* data);
 
+/* ================================ */
+
+extern int sList_delete_Node(const sList_t list, sNode_t node, void** data);
+
 /* ================================================================ */
 
 #endif /* singly_list_h */
