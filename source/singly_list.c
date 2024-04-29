@@ -511,4 +511,31 @@ int sList_delete_Node(const sList_t list, sNode_t node, void** data) {
     return 0;
 }
 
+/* ================================ */
+/* ======== sList_foreach ========= */
+/* ================================ */
+
+int sList_foreach(const sList_t list, int (*func)(void* data)) {
+
+    int nodes_affected = 0;
+
+    sNode_t node = NULL;
+
+    if (list == NULL) {
+        return 1;
+    }
+
+    if (func == NULL) {
+        return 1;
+    }
+
+    for (node = list->data->head; node != NULL; node = node->next) {
+        nodes_affected += (func(node->data) == 0) ? 1 : 0;
+    }
+
+    /* ======== */
+
+    return nodes_affected;
+}
+
 /* ================================================================ */
