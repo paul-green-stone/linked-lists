@@ -95,15 +95,15 @@ void sList_print_test(void) {
 /* ======================= sList_clear TEST ======================= */
 /* ================================================================ */
 
-void sList_insert_after_test(void) {
+void sList_insert_before_test(void) {
 
     sNode_t temp = NULL;
 
-    sList_find(list, (array + 1), &temp);
+    sList_find(list, (array + 9), &temp);
 
     CU_ASSERT_PTR_NOT_NULL(temp);
 
-    sList_insert_after(list, temp, (array + 0));
+    sList_insert_before(list, temp, (array + 0));
 
     CU_ASSERT_EQUAL(sList_size(list), size + 1);
 }
@@ -121,7 +121,7 @@ void sList_print_test_suite2(void) {
     CU_ASSERT_PTR_NOT_NULL(f);
 
     /* Expected value after clearing and populating once again */
-    char buffer[BUFFER_SIZE] = "0, 1, 0, 2, 3, 4, 5, 6, 7, 8, 9";
+    char buffer[BUFFER_SIZE] = "0, 1, 2, 3, 4, 5, 6, 7, 8, 0, 9";
     /* What had been read from a file */
     char file_content[BUFFER_SIZE];
 
@@ -165,7 +165,7 @@ int main(int argc, char** argv) {
     }
 
     /* Add a suite2 to the registry */
-    suite2 = CU_add_suite("sList_insert_after & test_sList_print", NULL, NULL);
+    suite2 = CU_add_suite("sList_insert_before & test_sList_print", NULL, NULL);
 
     if (suite2 == NULL) {
         CU_cleanup_registry();
@@ -181,7 +181,7 @@ int main(int argc, char** argv) {
     }
 
     /* suite2 */
-    if ((CU_add_test(suite2, "sList_insert_after_test", sList_insert_after_test) == NULL) || (CU_add_test(suite2, "sList_print_test_suite2", sList_print_test_suite2) == NULL)) {
+    if ((CU_add_test(suite2, "sList_insert_before_test", sList_insert_before_test) == NULL) || (CU_add_test(suite2, "sList_print_test_suite2", sList_print_test_suite2) == NULL)) {
         CU_cleanup_registry();
 
         return CU_get_error();

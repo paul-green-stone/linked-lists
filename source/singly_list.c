@@ -435,4 +435,43 @@ int sList_insert_after(const sList_t list, const sNode_t node, void* data) {
     return 0;
 }
 
+/* ================================ */
+/* ===== sList_insert_before ====== */
+/* ================================ */
+
+int sList_insert_before(const sList_t list, const sNode_t node, void* data) {
+
+    sNode_t new_node = NULL;
+    sNode_t temp = NULL;
+
+    if (list == NULL) {
+        return 1;
+    }
+
+    if ((node == NULL) || (node == list->data->head)) {
+        return sList_insert_first(list, data);
+    }
+
+    if (node->list != list) {
+        return 1;
+    }
+
+    for (temp = list->data->head; temp->next != node && temp != NULL; temp = temp->next) ;
+
+    if (Node_new(data, &new_node) != 0) {
+        return 1;
+    }
+
+    new_node->next = temp->next;
+    temp->next = new_node;
+
+    list->data->size++;
+
+    new_node->list = list;
+
+    /* ======== */
+
+    return 0;
+}
+
 /* ================================================================ */
