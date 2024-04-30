@@ -117,6 +117,8 @@ int main(int argc, char** argv) {
     CU_basic_run_tests();
     CU_cleanup_registry();
 
+    sList_destroy(&list);
+
     return CU_get_error();
 }
 

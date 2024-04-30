@@ -52,7 +52,7 @@ Updated test suites to handle different list operations
 
 ### Fixed
 
-- Implemented separate test cases for different operations, organizing them into individual directories. Enhanced test suite structure for better readability and management.
+- Implemented separate test cases for different operations, organizing them into individual directories. Enhanced test suite structure for better readability and management
 
 ## [Unreleased 0.4.0] 2024-04-20
 
@@ -64,3 +64,24 @@ Updated test suites to handle different list operations
 - Added a test for `sList_insert_last` function
 - Added a test for `sList_remove_last` function
 - Added a test for `sList_find` function
+
+## [Unreleased 0.5.0] 2024-04-29
+
+### Added
+
+- Implemented a `sList_insert_after` function that inserts a new node with the given data after a specified node
+- Implemented a `sList_insert_before` function that inserts a new node with the given data before a specified node
+- Implemented a `sList_delete_node` function that removes a node from a list
+- Implemented a `sList_foreach` function that applies a given function to every node in the list
+- Implemented a `sList_next` function that retrieves the next node's data
+- Implemented a `sList_head` function that retrieves the list head
+- Implemented a `sList_tail` function that retrieves the list tail
+- Implemented a `sNode_data` function that retrieves the node's data
+
+- Added documentation to list API
+- Added tests for all the funtions added in version `0.5.0`.
+
+### Fixed
+
+- The `sList_find` function now checks for the presence of the "match" method
+- The `sList_foreach` function returns a negative value on failure to avoid confusing the user. A positive return value indicates the number of nodes to which the provided function has been applied

@@ -522,11 +522,11 @@ int sList_foreach(const sList_t list, int (*func)(void* data)) {
     sNode_t node = NULL;
 
     if (list == NULL) {
-        return 1;
+        return -1;
     }
 
     if (func == NULL) {
-        return 1;
+        return -1;
     }
 
     for (node = list->data->head; node != NULL; node = node->next) {
