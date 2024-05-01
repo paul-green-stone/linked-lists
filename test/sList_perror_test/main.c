@@ -104,6 +104,8 @@ void sList_perror_test(void) {
     code = sList_delete_Node(l, node, &data);
     CU_ASSERT_EQUAL(code, LIST_MISMATCH);
 
+    fprintf(stderr, "%s\n", sList_error(code));
+
     sList_destroy(&l);
 }
 

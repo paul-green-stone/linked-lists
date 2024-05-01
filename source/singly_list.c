@@ -667,9 +667,9 @@ int sNode_data(const sNode_t node, void** data) {
 /* ========= sList_perror ========= */
 /* ================================ */
 
-void sList_perror(int error_code) {
+char* sList_error(int error_code) {
 
-    struct error {
+    static struct error {
         int code;
         char* msg;
     } errors[] = {
@@ -677,11 +677,11 @@ void sList_perror(int error_code) {
         {NULL_NODE, "\033[0;ERROR\033[0;37m: node as NULL is not expected"},
         {NULL_LIST, "\033[0;ERROR\033[0;37m: list as NULL is not expected"},
         {MISSING_METHOD, "\033[0;33mWARNING\033[0;37m: method/function is missing"},
-        {MISSING_DATA, "\033[0;ERROR\033[0;37m: data as NULL is not expected"},
-        {LIST_MISMATCH, "033[0;ERROR\033[0;37m: foreign node is encountered"}
+        {MISSING_DATA, "\033[0;31mERROR\033[0;37m: data as NULL is not expected"},
+        {LIST_MISMATCH, "\033[0;31mERROR\033[0;37m: foreign node is encountered"}
     };
 
-    fprintf(stderr, "%s\n", (error_code <= 0) ? errors[-error_code].msg : strerror(error_code));
+    return (error_code <= 0) ? errors[-error_code].msg : strerror(error_code);
 }
 
 /* ================================================================ */

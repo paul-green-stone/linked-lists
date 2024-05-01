@@ -34,17 +34,6 @@ void sList_destroy_test(void) {
 }
 
 /* ================================================================ */
-/* ====================== sList_destroy TEST ====================== */
-/* ================================================================ */
-
-void test_sList_destroy(void) {
-
-    sList_destroy(&list);
-
-    CU_ASSERT_PTR_NULL(list);
-}
-
-/* ================================================================ */
 
 int main(int argc, char** argv) {
 
@@ -65,7 +54,7 @@ int main(int argc, char** argv) {
     }
 
     /* SUITE */
-    if ((CU_add_test(suite, "sList_new_test", sList_new_test) == NULL) || (CU_add_test(suite, "test_sList_destroy", test_sList_destroy) == NULL)) {
+    if ((CU_add_test(suite, "sList_new", sList_new_test) == NULL) || (CU_add_test(suite, "sList_destroy", sList_destroy_test) == NULL)) {
         CU_cleanup_registry();
 
         return CU_get_error();

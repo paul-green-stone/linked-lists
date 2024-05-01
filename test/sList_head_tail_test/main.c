@@ -57,7 +57,7 @@ void sList_insert_last_test(void) {
         sList_insert_last(list, &array[i]);
     }
 
-    (sList_size(list), size);
+    CU_ASSERT_EQUAL(sList_size(list), size);
 }
 
 /* ================================================================ */
@@ -97,7 +97,7 @@ int main(int argc, char** argv) {
     }
 
     /* Add a suite1 to the registry */
-    suite1 = CU_add_suite("sList_insert_last & sList_head_tail_test", NULL, NULL);
+    suite1 = CU_add_suite("sList_insert_last & sList_tail", NULL, NULL);
 
     if (suite1 == NULL) {
         CU_cleanup_registry();
@@ -106,7 +106,7 @@ int main(int argc, char** argv) {
     }
 
     /* suite1 */
-    if ((CU_add_test(suite1, "sList_insert_last_test", sList_insert_last_test) == NULL) || (CU_add_test(suite1, "sList_head_tail_test", sList_head_tail_test) == NULL)) {
+    if ((CU_add_test(suite1, "sList_insert_last", sList_insert_last_test) == NULL) || (CU_add_test(suite1, "sList_head", sList_head_tail_test) == NULL)) {
         CU_cleanup_registry();
 
         return CU_get_error();

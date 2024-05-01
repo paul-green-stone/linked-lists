@@ -89,7 +89,7 @@ int main(int argc, char** argv) {
     }
 
     /* Add a suite1 to the registry */
-    suite1 = CU_add_suite("sList_insert_last & test_sList_print", NULL, NULL);
+    suite1 = CU_add_suite("sList_insert_last & sList_next", NULL, NULL);
 
     if (suite1 == NULL) {
         CU_cleanup_registry();
@@ -98,7 +98,7 @@ int main(int argc, char** argv) {
     }
 
     /* suite1 */
-    if ((CU_add_test(suite1, "sList_insert_last_test", sList_insert_last_test) == NULL) || (CU_add_test(suite1, "sList_next_test", sList_next_test) == NULL)) {
+    if ((CU_add_test(suite1, "sList_insert_last", sList_insert_last_test) == NULL) || (CU_add_test(suite1, "sList_next", sList_next_test) == NULL)) {
         CU_cleanup_registry();
 
         return CU_get_error();
@@ -108,6 +108,8 @@ int main(int argc, char** argv) {
     CU_basic_set_mode(CU_BRM_VERBOSE);
     CU_basic_run_tests();
     CU_cleanup_registry();
+
+    sList_destroy(&list);
 
     return CU_get_error();
 }
