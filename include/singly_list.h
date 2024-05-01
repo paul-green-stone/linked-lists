@@ -3,7 +3,7 @@
 
 #include "lists.h"
 
-#define sList_print(list) (sList_printTo(list, stdout))
+#define sList_print(list) (sList_printTo(list, ", ", stdout))
 
 /* ================================================================ */
 

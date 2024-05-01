@@ -51,19 +51,23 @@ static int Node_new(void* data, sNode_t* node) {
 
     sNode_t n = NULL;
 
+    errno = 0;
+
     if (data == NULL) {
-        return 1;
+        return MISSING_DATA;
     }
 
     if ((n = calloc(1, sizeof(struct singly_linked_list_node))) == NULL) {
-        return 12;
+        return errno;
     }
 
     n->data = data;
 
     *node = n;
 
-    return 0;
+    /* ======== */
+
+    return NO_ERROR;
 }
 
 /* ================================ */
@@ -73,7 +77,7 @@ static int Node_new(void* data, sNode_t* node) {
 static int Node_destroy(sNode_t* node, void** data) {
 
     if ((node == NULL) || (*node == NULL)) {
-        return 1;
+        return NULL_NODE;
     }
 
     *data = (*node)->data;
@@ -82,7 +86,9 @@ static int Node_destroy(sNode_t* node, void** data) {
 
     *node = NULL;
 
-    return 0;
+    /* ======== */
+
+    return NO_ERROR;
 }
 
 /* ================================================================ */
@@ -97,22 +103,24 @@ int sList_new(sList_t* list, void (*destroy)(void* data), void (*print)(void* da
 
     sList_t l = NULL;
 
+    errno = 0;
+
     if ((l = calloc(1, sizeof(struct singly_linked_list))) == NULL) {
 
         /* Out of memory */
-        return 12;
+        return errno;
     }
 
     if ((l->methods = calloc(1, sizeof(struct methods))) == NULL) {
         
         /* Out of memory */
-        return 12;
+        return errno;
     }
 
     if ((l->data = calloc(1, sizeof(struct data))) == NULL) {
         
         /* Out of memory */
-        return 12;
+        return errno;
     }
 
     l->methods->destroy = destroy;
@@ -121,7 +129,9 @@ int sList_new(sList_t* list, void (*destroy)(void* data), void (*print)(void* da
 
     *list = l;
 
-    return 0;
+    /* ======== */
+
+    return NO_ERROR;
 }
 
 /* ================================ */
@@ -130,16 +140,17 @@ int sList_new(sList_t* list, void (*destroy)(void* data), void (*print)(void* da
 
 int sList_destroy(sList_t* list) {
 
-    int result = 0;
+    int code = NO_ERROR;
+
     void* data = NULL;
 
     if ((list == NULL) || (*list == NULL)) {
-        return -1;
+        return NULL_LIST;
     }
 
     while ((*list)->data->size > 0) {
         
-        result = sList_remove_first(*list, &data);
+        code = sList_remove_first(*list, &data);
 
         if ((*list)->methods->destroy != NULL) {
             (*list)->methods->destroy(data);
@@ -152,7 +163,9 @@ int sList_destroy(sList_t* list) {
 
     *list = NULL;
 
-    return result;
+    /* ======== */
+
+    return code;
 }
 
 /* ================================ */
@@ -161,14 +174,15 @@ int sList_destroy(sList_t* list) {
 
 int sList_insert_last(const sList_t list, void* data) {
 
-    int code = 0;
+    int code = NO_ERROR;
+
     sNode_t node = NULL;
 
     if (list == NULL) {
-        return 1;
+        return NULL_LIST;
     }
 
-    if ((code = Node_new(data, &node)) != 0) {
+    if ((code = Node_new(data, &node)) != NO_ERROR) {
         return code;
     }
 
@@ -184,6 +198,8 @@ int sList_insert_last(const sList_t list, void* data) {
 
     node->list = list;
 
+    /* ======== */
+
     return code;
 }
 
@@ -193,14 +209,14 @@ int sList_insert_last(const sList_t list, void* data) {
 
 int sList_remove_first(const sList_t list, void** data) {
 
-    int code = 0;
+    int code = NO_ERROR;
 
     ssize_t size = 0;
 
     sNode_t node = NULL;
 
     if (list == NULL) {
-        return 1;
+        return NULL_LIST;
     }
 
     size = list->data->size;
@@ -222,6 +238,8 @@ int sList_remove_first(const sList_t list, void** data) {
         list->data->size--;
     }
 
+    /* ======== */
+
     return code;
 }
 
@@ -232,8 +250,10 @@ int sList_remove_first(const sList_t list, void** data) {
 ssize_t sList_size(const sList_t list) {
     
     if (list == NULL) {
-        return -1;
+        return NULL_LIST;
     }
+
+    /* ======== */
 
     return list->data->size;
 }
@@ -247,11 +267,11 @@ int sList_printTo(const sList_t list, const char* delimiter, FILE* file) {
     sNode_t node = NULL;
 
     if (list == NULL) {
-        return 1;
+        return NULL_LIST;
     }
 
     if (list->methods->print == NULL) {
-        return 1;
+        return MISSING_METHOD;
     }
 
     for (node = list->data->head; node != NULL; node = node->next) {
@@ -262,7 +282,9 @@ int sList_printTo(const sList_t list, const char* delimiter, FILE* file) {
         }
     }
 
-    return 0;
+    /* ======== */
+
+    return NO_ERROR;
 }
 
 /* ================================ */
@@ -271,14 +293,15 @@ int sList_printTo(const sList_t list, const char* delimiter, FILE* file) {
 
 int sList_insert_first(const sList_t list, void* data) {
 
-    int code = 0;
+    int code = NO_ERROR;
+
     sNode_t node = NULL;
 
     if (list == NULL) {
-        return -1;
+        return NULL_LIST;
     }
 
-    if ((code = Node_new(data, &node)) != 0) {
+    if ((code = Node_new(data, &node)) != NO_ERROR) {
         return code;
     }
 
@@ -294,11 +317,13 @@ int sList_insert_first(const sList_t list, void* data) {
 
     node->list = list;
 
+    /* ======== */
+
     return code;
 }
 
 /* ================================ */
-/* ====== sList_insert_clear ====== */
+/* ========= sList_clear ========== */
 /* ================================ */
 
 int sList_clear(const sList_t list) {
@@ -306,7 +331,7 @@ int sList_clear(const sList_t list) {
     void* data = NULL;
 
     if (list == NULL) {
-        return 1;
+        return NULL_LIST;
     }
 
     while (list->data->size > 0) {
@@ -319,7 +344,7 @@ int sList_clear(const sList_t list) {
         }
     }
 
-    return 0;
+    return NO_ERROR;
 }
 
 /* ================================ */
@@ -334,7 +359,7 @@ int sList_remove_last(const sList_t list, void** data) {
     sNode_t temp = NULL;
 
     if (list == NULL) {
-        return 1;
+        return NULL_LIST;
     }
 
     size = list->data->size;
@@ -362,7 +387,7 @@ int sList_remove_last(const sList_t list, void** data) {
 
     /* ======== */
 
-    return 0;
+    return NO_ERROR;
 }
 
 /* ================================ */
@@ -374,15 +399,15 @@ int sList_find(const sList_t list, void* data, sNode_t* node) {
     sNode_t temp = NULL;
 
     if (list == NULL) {
-        return 1;
+        return NULL_LIST;
     }
 
     if (data == NULL) {
-        return 1;
+        return MISSING_DATA;
     }
 
     if (list->methods->match == NULL) {
-        return 1;
+        return MISSING_METHOD;
     }
 
     for (temp = list->data->head; temp != NULL; temp = temp->next) {
@@ -390,7 +415,7 @@ int sList_find(const sList_t list, void* data, sNode_t* node) {
         if (list->methods->match(temp->data, data) == 0) {
             *node = temp;
 
-            return 0;
+            return NO_ERROR;
         }
     }
 
@@ -405,10 +430,12 @@ int sList_find(const sList_t list, void* data, sNode_t* node) {
 
 int sList_insert_after(const sList_t list, const sNode_t node, void* data) {
 
+    int code = NO_ERROR;
+
     sNode_t new_node = NULL;
 
     if (list == NULL) {
-        return 1;
+        return NULL_LIST;
     }
 
     if ((node == NULL) || (node == list->data->tail)) {
@@ -416,11 +443,11 @@ int sList_insert_after(const sList_t list, const sNode_t node, void* data) {
     }
 
     if (node->list != list) {
-        return 1;
+        return LIST_MISMATCH;
     }
 
-    if (Node_new(data, &new_node) != 0) {
-        return 1;
+    if ((code = Node_new(data, &new_node)) != NO_ERROR) {
+        return code;
     }
 
     new_node->next = node->next;
@@ -432,7 +459,7 @@ int sList_insert_after(const sList_t list, const sNode_t node, void* data) {
 
     /* ======== */
 
-    return 0;
+    return code;
 }
 
 /* ================================ */
@@ -441,11 +468,13 @@ int sList_insert_after(const sList_t list, const sNode_t node, void* data) {
 
 int sList_insert_before(const sList_t list, const sNode_t node, void* data) {
 
+    int code = NO_ERROR;
+
     sNode_t new_node = NULL;
     sNode_t temp = NULL;
 
     if (list == NULL) {
-        return 1;
+        return NULL_LIST;
     }
 
     if ((node == NULL) || (node == list->data->head)) {
@@ -453,13 +482,13 @@ int sList_insert_before(const sList_t list, const sNode_t node, void* data) {
     }
 
     if (node->list != list) {
-        return 1;
+        return LIST_MISMATCH;
     }
 
     for (temp = list->data->head; temp->next != node; temp = temp->next) ;
 
-    if (Node_new(data, &new_node) != 0) {
-        return 1;
+    if ((code = Node_new(data, &new_node)) != NO_ERROR) {
+        return code;
     }
 
     new_node->next = temp->next;
@@ -471,7 +500,7 @@ int sList_insert_before(const sList_t list, const sNode_t node, void* data) {
 
     /* ======== */
 
-    return 0;
+    return code;
 }
 
 /* ================================ */
@@ -483,7 +512,11 @@ int sList_delete_Node(const sList_t list, sNode_t node, void** data) {
     sNode_t temp = NULL;
 
     if (list == NULL) {
-        return 1;
+        return NULL_LIST;
+    }
+
+    if (node == NULL) {
+        return NULL_NODE;
     }
 
     if (node == list->data->head) {
@@ -495,7 +528,7 @@ int sList_delete_Node(const sList_t list, sNode_t node, void** data) {
     }
 
     if (node->list != list) {
-        return 1;
+        return LIST_MISMATCH;
     }
 
     for (temp = list->data->head; temp->next != node; temp = temp->next) ;
@@ -508,7 +541,7 @@ int sList_delete_Node(const sList_t list, sNode_t node, void** data) {
 
     /* ======== */
 
-    return 0;
+    return NO_ERROR;
 }
 
 /* ================================ */
@@ -522,11 +555,11 @@ int sList_foreach(const sList_t list, int (*func)(void* data)) {
     sNode_t node = NULL;
 
     if (list == NULL) {
-        return -1;
+        return NULL_LIST;
     }
 
     if (func == NULL) {
-        return -1;
+        return MISSING_METHOD;
     }
 
     for (node = list->data->head; node != NULL; node = node->next) {
@@ -539,7 +572,7 @@ int sList_foreach(const sList_t list, int (*func)(void* data)) {
 }
 
 /* ================================ */
-/* ========= sList_next =========== */
+/* ========== sList_next ========== */
 /* ================================ */
 
 int sList_next(const sList_t list, void** data) {
@@ -563,7 +596,7 @@ int sList_next(const sList_t list, void** data) {
     }
 
     if (l == NULL) {
-        return 1;
+        return NULL_LIST;
     }
 
     *data = n->data;
@@ -576,58 +609,79 @@ int sList_next(const sList_t list, void** data) {
 
     /* ======== */
 
-    return 0;
+    return NO_ERROR;
 }
 
 /* ================================ */
-/* ========= sList_head =========== */
+/* ========== sList_head ========== */
 /* ================================ */
 
 int sList_head(const sList_t list, sNode_t* node) {
 
     if (list == NULL) {
-        return 1;
+        return NULL_LIST;
     }
 
     *node = list->data->head;
 
     /* ======== */
 
-    return 0;
+    return NO_ERROR;
 }
 
 /* ================================ */
-/* ========= sList_tail =========== */
+/* ========== sList_tail ========== */
 /* ================================ */
 
 int sList_tail(const sList_t list, sNode_t* node) {
 
     if (list == NULL) {
-        return 1;
+        return NULL_LIST;
     }
 
     *node = list->data->tail;
 
     /* ======== */
 
-    return 0;
+    return NO_ERROR;
 }
 
 /* ================================ */
-/* ========= sNode_data =========== */
+/* ========== sNode_data ========== */
 /* ================================ */
 
 int sNode_data(const sNode_t node, void** data) {
 
     if (node == NULL) {
-        return 1;
+        return NULL_NODE;
     }
 
     *data = node->data;
 
     /* ======== */
 
-    return 0;
+    return NO_ERROR;
+}
+
+/* ================================ */
+/* ========= sList_perror ========= */
+/* ================================ */
+
+void sList_perror(int error_code) {
+
+    struct error {
+        int code;
+        char* msg;
+    } errors[] = {
+        {NO_ERROR, "\033[0;32mSuccess\033[0;37m"},
+        {NULL_NODE, "\033[0;ERROR\033[0;37m: node as NULL is not expected"},
+        {NULL_LIST, "\033[0;ERROR\033[0;37m: list as NULL is not expected"},
+        {MISSING_METHOD, "\033[0;33mWARNING\033[0;37m: method/function is missing"},
+        {MISSING_DATA, "\033[0;ERROR\033[0;37m: data as NULL is not expected"},
+        {LIST_MISMATCH, "033[0;ERROR\033[0;37m: foreign node is encountered"}
+    };
+
+    fprintf(stderr, "%s\n", (error_code <= 0) ? errors[-error_code].msg : strerror(error_code));
 }
 
 /* ================================================================ */

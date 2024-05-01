@@ -11,7 +11,10 @@ extern "C" {
 #include <stdio.h>
 #include <stdlib.h>
 #include <sys/types.h>
+#include <errno.h>
+#include <string.h>
 
+#include "listerrors.h"
 #include "linked_list_types.h"
 #include "singly_list.h"
 
