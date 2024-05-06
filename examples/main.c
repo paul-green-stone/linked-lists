@@ -3,7 +3,11 @@
 #include <string.h>
 #include <time.h>
 
+/* ================================================================ */
+
 #define RAND(min, max) ((rand() % (max - min + 1)) + min)
+
+/* ================================ */
 
 typedef struct person {
 
@@ -13,11 +17,15 @@ typedef struct person {
     unsigned int age;
 } Person;
 
+/* ================================ */
+
 /* The list of available first names */
 char* first_names[] = {"James", "Mary", "Robert", "Patricia", "John", "Jennifer", "Michael", "Linda", "David", "Elizabeth"};
 
 /* The list of available last names */
 char* last_names[] = {"Smith", "Brown", "Tremblay", "Martin", "Roy", "Gagnon", "Lee", "Wilson", "Johnson", "MacDonald"};
+
+/* ================================================================ */
 
 Person* Person_new(void) {
 
@@ -36,6 +44,8 @@ Person* Person_new(void) {
     return person;
 }
 
+/* ================================================================ */
+
 void Person_destroy(void* data) {
 
     Person* person = (Person*) data;
@@ -52,6 +62,8 @@ void Person_destroy(void* data) {
     person = NULL;
 }
 
+/* ================================================================ */
+
 void Person_print(void* data, FILE* f) {
 
     /* Assume data is never NULL, just for the sake of simplicity */
@@ -59,6 +71,8 @@ void Person_print(void* data, FILE* f) {
 
     fprintf(f, "%s %s - %u", p->first_name, p->last_name, p->age);
 }
+
+/* ================================================================ */
 
 int Person_match(void* data1, void* data2) {
 
@@ -93,12 +107,15 @@ int main(int argc, char** argv) {
         sList_next(list, &data);
     }
 
+    /* Display it */
     printf("\n\nThe third person in the list: ");
     Person_print(data, stdout);
 
+    /* Find the same node the "regular" way */
     sList_find(list, data, &node);
     sNode_data(node, &data);
 
+    /* Display it */
     printf("\n\nWhat we found is: ");
     Person_print(data, stdout);
 
