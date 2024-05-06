@@ -85,3 +85,10 @@ Updated test suites to handle different list operations
 
 - The `sList_find` function now checks for the presence of the "match" method
 - The `sList_foreach` function returns a negative value on failure to avoid confusing the user. A positive return value indicates the number of nodes to which the provided function has been applied
+
+## [Release 1.0.0] 2024-05-07
+
+### Added
+
+- Implemented a `sList_error` function that returns a string describing the error
+- Added a simple showcase for how to use a linked list data structure

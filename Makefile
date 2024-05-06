@@ -1,18 +1,18 @@
-OBJDIR						:= objects
-OBJECTS						:= $(addprefix $(OBJDIR)/, Lists.o)
+OBJDIR := objects
+OBJECTS := $(addprefix $(OBJDIR)/, Lists.o)
 
-CC 							:= gcc
-CFLAGS						:= -g -c
-ALL_CFLAGS					:= $(CFLAGS) -Wall -Wextra -pedantic-errors -fPIC -O2
+CC := gcc
+CFLAGS := -g -c
+ALL_CFLAGS := $(CFLAGS) -Wall -Wextra -pedantic-errors -fPIC -O2
 
-AR							:= ar
-ARFLAGS						:= -r -s
+AR := ar
+ARFLAGS := -r -s
 
-OS_NAME						:= $(shell uname -s)
+OS_NAME := $(shell uname -s)
 
-INCLUDE						:= -Iinclude
+INCLUDE := -Iinclude
 
-LIB_NAME					:= lists
+LIB_NAME := lists
 
 ifeq ($(OS_NAME), Linux)
     LIB_PREFIX				:= lib
@@ -30,11 +30,11 @@ else
     $(echo Unsupported operating system)
 endif
 
-SRCS						:= $(wildcard source/*.c)
-OBJS						:= $(patsubst source/%.c, objects/%.o, $(SRCS))
+SRCS := $(wildcard source/*.c)
+OBJS := $(patsubst source/%.c, objects/%.o, $(SRCS))
 
-TARGET_STATIC				:= $(LIB_PREFIX)$(LIB_NAME)$(LIB_SUFFIX)
-TARGET_SHARED				:= $(LIB_PREFIX)$(LIB_NAME)$(DLL_SUFFIX)
+TARGET_STATIC := $(LIB_PREFIX)$(LIB_NAME)$(LIB_SUFFIX)
+TARGET_SHARED := $(LIB_PREFIX)$(LIB_NAME)$(DLL_SUFFIX)
 
 # ================================================================ #
 
