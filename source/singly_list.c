@@ -37,6 +37,8 @@ struct data {
 
     sNode_t head;
     sNode_t tail;
+
+    sNode_t current;
 };
 
 /* ================================================================ */
@@ -188,6 +190,8 @@ int sList_insert_last(const sList_t list, void* data) {
 
     if (list->data->size == 0) {
         list->data->head = list->data->tail = node;
+
+        list->data->current = node;
     }
     else {
         list->data->tail->next = node;
@@ -228,8 +232,12 @@ int sList_remove_first(const sList_t list, void** data) {
 
         if (size == 1) {
             list->data->head = list->data->tail = NULL;
+
+            list->data->current = NULL;
         }
         else {
+            list->data->current = (list->data->current == list->data->head) ? list->data->head->next : list->data->current;
+
             list->data->head = list->data->head->next;
         }
 
@@ -307,10 +315,14 @@ int sList_insert_first(const sList_t list, void* data) {
 
     if (list->data->size == 0) {
         list->data->head = list->data->tail = node;
+
+        list->data->current = node;
     }
     else {
         node->next = list->data->head;
         list->data->head = node;
+
+        list->data->current = (list->data->current == list->data->head) ? node : list->data->head;
     }
 
     list->data->size++;
@@ -371,8 +383,12 @@ int sList_remove_last(const sList_t list, void** data) {
 
         if (size == 1) {
             list->data->head = list->data->tail = NULL;
+
+            list->data->current = NULL;
         }
         else {
+
+            list->data->current = (list->data->current == list->data->tail) ? list->data->head : list->data->current;
 
             for (temp = list->data->head; temp->next != list->data->tail; temp = temp->next) ;
 
@@ -406,6 +422,10 @@ int sList_find(const sList_t list, void* data, sNode_t* node) {
         return MISSING_DATA;
     }
 
+    if (node == NULL) {
+        return NULL_NODE;
+    }
+
     if (list->methods->match == NULL) {
         return MISSING_METHOD;
     }
@@ -421,7 +441,7 @@ int sList_find(const sList_t list, void* data, sNode_t* node) {
 
     /* ======== */
 
-    return 1;
+    return NOT_FOUND;
 }
 
 /* ================================ */
@@ -449,6 +469,8 @@ int sList_insert_after(const sList_t list, const sNode_t node, void* data) {
     if ((code = Node_new(data, &new_node)) != NO_ERROR) {
         return code;
     }
+
+    list->data->current = (list->data->current == node->next) ? new_node : list->data->current;
 
     new_node->next = node->next;
     node->next = new_node;
@@ -490,6 +512,8 @@ int sList_insert_before(const sList_t list, const sNode_t node, void* data) {
     if ((code = Node_new(data, &new_node)) != NO_ERROR) {
         return code;
     }
+
+    list->data->current = (list->data->current == node) ? new_node : list->data->current;
 
     new_node->next = temp->next;
     temp->next = new_node;
@@ -535,6 +559,8 @@ int sList_delete_Node(const sList_t list, sNode_t node, void** data) {
 
     temp->next = node->next;
 
+    list->data->current = (list->data->current == node) ? node->next : list->data->current;
+
     Node_destroy(&node, data);
 
     list->data->size--;
@@ -575,41 +601,28 @@ int sList_foreach(const sList_t list, int (*func)(void* data)) {
 /* ========== sList_next ========== */
 /* ================================ */
 
-int sList_next(const sList_t list, void** data) {
+void* sList_next(const sList_t list) {
 
-    /* List that is being operated on */
-    static sList_t l = NULL;
+    void* data = NULL;
 
-    /* The list node whose data was returned by the previous call */
-    static sNode_t n = NULL;
-
-    // The first time the function is being called requires us to set up its internals
-    // or
-    // when the new list specified does not match the one specified in the iterator.
-    if ((l == NULL) || ((l != list) && (list != NULL))) {
-
-        l = list;
-
-        if (list->data->size > 0) {
-            n = list->data->head;
-        }
+    if (list == NULL) {
+        return NULL;
     }
 
-    if (l == NULL) {
-        return NULL_LIST;
+    if (list->data->current == NULL) {
+
+        list->data->current = list->data->head;
+
+        return NULL;
     }
 
-    *data = n->data;
+    data = list->data->current->data;
 
-    n = n->next;
-
-    if (n == NULL) {
-        n = list->data->head;
-    }
+    list->data->current = list->data->current->next;
 
     /* ======== */
 
-    return NO_ERROR;
+    return data;
 }
 
 /* ================================ */
@@ -674,14 +687,32 @@ char* sList_error(int error_code) {
         char* msg;
     } errors[] = {
         {NO_ERROR, "\033[0;32mSuccess\033[0;37m"},
-        {NULL_NODE, "\033[0;ERROR\033[0;37m: node as NULL is not expected"},
-        {NULL_LIST, "\033[0;ERROR\033[0;37m: list as NULL is not expected"},
+        {NULL_NODE, "\033[0;mERROR\033[0;37m: node as NULL is not expected"},
+        {NULL_LIST, "\033[0;mERROR\033[0;37m: list as NULL is not expected"},
         {MISSING_METHOD, "\033[0;33mWARNING\033[0;37m: method/function is missing"},
         {MISSING_DATA, "\033[0;31mERROR\033[0;37m: data as NULL is not expected"},
-        {LIST_MISMATCH, "\033[0;31mERROR\033[0;37m: foreign node is encountered"}
+        {LIST_MISMATCH, "\033[0;31mERROR\033[0;37m: foreign node is encountered"},
+        {NOT_FOUND, "\033[0;32mSuccess\033[0;37m: not found"}
     };
 
     return (error_code <= 0) ? errors[-error_code].msg : strerror(error_code);
+}
+
+/* ================================ */
+/* ========= sList_reset ========== */
+/* ================================ */
+
+int sList_reset(const sList_t list) {
+    
+    if (list == NULL) {
+        return NULL_LIST;
+    }
+
+    list->data->current = list->data->head;
+
+    /* ======== */
+
+    return NO_ERROR;
 }
 
 /* ================================================================ */

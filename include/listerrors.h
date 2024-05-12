@@ -11,7 +11,8 @@ enum ListErrorCodes {
     NULL_LIST = -2,
     MISSING_METHOD = -3,
     MISSING_DATA = -4,
-    LIST_MISMATCH = -5
+    LIST_MISMATCH = -5,
+    NOT_FOUND = -6
 };
 
 /* ================================ */

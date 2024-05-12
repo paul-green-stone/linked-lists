@@ -79,7 +79,7 @@ int Person_match(void* data1, void* data2) {
     Person* person1 = (Person*) data1;
     Person* person2 = (Person*) data2;
 
-    return !((strcmp(person1->first_name, person2->first_name) == 0) && (strcmp(person1->last_name, person2->last_name) == 0) && !(person1->age == person2->age));
+    return !((strcmp(person1->first_name, person2->first_name) == 0) && (strcmp(person1->last_name, person2->last_name) == 0) && (person1->age == person2->age));
 }
 
 /* ================================================================ */
@@ -94,7 +94,7 @@ int main(int argc, char** argv) {
     sList_new(&list, Person_destroy, Person_print, Person_match);
 
     for (size_t i = 0; i < 10; i++) {
-        sList_insert_last(list, Person_new());
+        sList_insert_first(list, Person_new());
     }
 
     sList_printTo(list, "\n", stdout);
@@ -104,7 +104,7 @@ int main(int argc, char** argv) {
 
     /* Take the third element from the list */
     for (size_t i = 0; i < 3; i++) {
-        sList_next(list, &data);
+        data = sList_next(list);
     }
 
     /* Display it */
@@ -116,13 +116,22 @@ int main(int argc, char** argv) {
     sNode_data(node, &data);
 
     /* Display it */
-    printf("\n\nWhat we found is: ");
+    printf("\n\nWhat we found is (in order to delete): ");
     Person_print(data, stdout);
+
+    /* Delete the found element */
+    sList_delete_Node(list, node, &data);
+    Person_destroy(data);
+
+    sList_reset(list);
+    printf("\n\nPrinting once again:\n----------------\n");
+    while ((data = sList_next(list)) != NULL) {
+        Person_print(data, stdout);
+        printf("\n");
+    }
 
     /* Destroy the list */
     sList_destroy(&list);
-
-    printf("\n");
 
     /* ======== */
 

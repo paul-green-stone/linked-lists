@@ -242,7 +242,7 @@ extern int sList_foreach(const sList_t list, int (*func)(void* data));
  * 
  * \return 0 on success, a non-zero value otherwise.
  */
-extern int sList_next(const sList_t list, void** data);
+extern void* sList_next(const sList_t list);
 
 /* ================================ */
 
@@ -279,6 +279,13 @@ extern int sList_tail(const sList_t list, sNode_t* node);
  * \return 0 on success, a non-zero value otherwise.
 */
 extern int sNode_data(const sNode_t node, void** data);
+
+/* ================================ */
+
+/**
+ * 
+ */
+extern int sList_reset(const sList_t list);
 
 /* ================================================================ */
 
