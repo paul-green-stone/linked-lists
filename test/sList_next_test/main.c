@@ -71,7 +71,7 @@ void sList_next_test(void) {
 
     for (i = 0; i < size; i++) {
 
-        sList_next(list, &data);
+        data = sList_next(list);
 
         CU_ASSERT_EQUAL(*((int*) data), array[i]);
     }

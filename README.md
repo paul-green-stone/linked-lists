@@ -252,25 +252,24 @@ According to the implementation, a list is a pointer to an incomplete type, whic
 ```C
 /* ... */
 
-/* Imagine the list contains some people */
+/* Imagine the list contains integers */
 
-size_t size = sList_size(list);
+void* data = NULL;
 
-for (size_t i = 0; i < size; i++) {
+while ((data = sList_next(list)) != NULL) {
 
-   void* data = NULL;
-   Person* person = NULL;
+  int value = *((int*) data);
 
-   /* Get data from the next node and store it in `data` */
-   sList_next(list, &data);
+  if (data == 111) {
 
-   person = (Person*) data;
-
-   /* Manually changing a book's title */
-   free(person->first_name);
-   person->first_name = strdup("Mr. Cool Name");
+    /* Do something */
+  }
 }
 ```
+
+After traversing all the elements in the list, `sList_next` returns `NULL`, indicating that the end of the list has been reached.
+
+The list maintains a current position pointer that keeps track of the node from which the next value should be returned when sList_next is called. To start traversing the list from the beginning, you can call the `sList_reset` function, which sets the current position back to the first node in the list.
 
 Notice that the `sList_next` function stores data in the generic `void*` pointer. You must cast this pointer according to whatever your list contains. While working with data in the list, the list itself remains untouched; its internal details are protected/hidden and can be modified only via methods defined here.
 
@@ -317,6 +316,6 @@ int result = sList_insert_last(&list, a);
 
 if (result != 0) {
 
-   printf("Error has occurred: %s\n", sList_error(result));
+  printf("Error has occurred: %s\n", sList_error(result));
 }
 ```

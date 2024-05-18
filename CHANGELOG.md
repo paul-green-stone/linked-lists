@@ -92,3 +92,15 @@ Updated test suites to handle different list operations
 
 - Implemented a `sList_error` function that returns a string describing the error
 - Added a simple showcase for how to use a linked list data structure
+
+## [Release 2.0.0] 2024-05-17
+
+### Added
+
+- A complete redesign of `sList_next` function
+- A list now maintains a pointer to the node whose data will be returned upon invoking `sList_next`
+- Added a `sList_reset` function that sets the current position back to the first node in the list
+- `sList_find` now returns `NOT_FOUND` if the given data is not in the list
+
+- Updated `README`
+- 
